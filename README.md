@@ -1,5 +1,6 @@
 # JETcompanhiaAerea
-![JETcompanhiaAerea](https://github.com/samueldemorais/JETcompanhiaAerea/assets/93936945/32ed0fe6-f5c0-4d15-84d2-c8f35531c87f)
+
+![JETcompanhiaAerea](https://github.com/samueldemorais/JETcompanhiaAerea/assets/93936945/5a7145fd-f2bf-4fa3-83be-b1403c334206)
 
 # Padrão Observer:
 O padrão Observer é usado para criar uma relação de dependência um-para-muitos entre objetos, de modo que, quando um objeto (chamado de "sujeito" ou "observado") muda de estado, todos os seus dependentes (chamados de "observadores") são notificados e atualizados automaticamente.
