@@ -17,7 +17,7 @@ No método atualizar(Voo voo), é realizada a lógica para notificar o passageir
 O padrão Observer foi usado para estabelecer uma relação onde os passageiros (observadores) são registrados para observar mudanças no estado do voo (sujeito observado). Quando o estado do voo é modificado, todos os passageiros são notificados automaticamente sobre essa mudança através do método atualizar(Voo voo). Isso permite que cada passageiro seja notificado de acordo com suas preferências quando o status do voo muda.
 
 
-# Padrão Observer:
+# Padrão Strategy:
 O padrão Strategy permite que você encapsule diferentes algoritmos em classes separadas e os torne intercambiáveis dentro de um contexto. Isso significa que pode selecionar qual algoritmo usar em tempo de execução, conforme necessário.
 
 # Interface StrategyNotification:
