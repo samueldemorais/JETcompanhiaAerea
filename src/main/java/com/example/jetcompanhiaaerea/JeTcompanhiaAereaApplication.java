@@ -13,7 +13,11 @@ import com.example.jetcompanhiaaerea.model.StatusVoo;
 import com.example.jetcompanhiaaerea.model.Voo;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 @SpringBootApplication
 public class JeTcompanhiaAereaApplication {
@@ -26,6 +30,8 @@ public class JeTcompanhiaAereaApplication {
 	private static StrategyNotification email = new EstrategyEmail();
 	private static StrategyNotification push = new EstrategyPush();
 	private static StrategyNotification sms = new EstrategySMS();
+
+	static List<Voo> voos = new ArrayList<>();
 
 	public static void main(String[] args) {
 		SpringApplication.run(JeTcompanhiaAereaApplication.class, args);
@@ -45,6 +51,11 @@ public class JeTcompanhiaAereaApplication {
 		Voo voo3 = new Voo("Voo3", "Porto Alegre", "Curitiba", partida3, chegada3, aeronave3);
 		Voo voo4 = new Voo("Voo4", "Fortaleza", "Recife", partida4, chegada4, aeronave1);
 		Voo voo5 = new Voo("Voo5", "Manaus", "Belém", partida5, chegada5, aeronave2);
+		voos.add(voo1);
+		voos.add(voo2);
+		voos.add(voo3);
+		voos.add(voo4);
+		voos.add(voo5);
 
 		// Criando passageiros individualmente para cada voo
 		Passageiro passageiro1 = new Passageiro("João", email);
@@ -87,6 +98,94 @@ public class JeTcompanhiaAereaApplication {
 		voo3.setStatusNotify(StatusVoo.CONFIRMADO);
 		voo4.setStatusNotify(StatusVoo.MUDANCA_PORTAO);
 		voo5.setStatusNotify(StatusVoo.ATRASADO);
+
+		Scanner scanner = new Scanner(System.in);
+
+
+		while (true) {
+			System.out.println();
+			System.out.println("Digite o código do voo: ");
+			String nomeVoo = scanner.nextLine();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+			// Procurar o voo na lista
+			Voo vooSelecionado = null;
+			for (Voo voo : voos) {
+				if (voo.getCodigoVoo().equalsIgnoreCase(nomeVoo)) {
+					vooSelecionado = voo;
+					break;
+				}
+			}
+
+			// Se não encontrou o voo, avise o usuário e continue para o próximo loop
+			if (vooSelecionado == null) {
+				System.out.println("Voo não encontrado.");
+				continue;
+			}
+
+			// Exibir informações do voo
+			System.out.println("Informações do Voo:");
+			System.out.println("Código: " + vooSelecionado.getCodigoVoo());
+			System.out.println("Status: " + vooSelecionado.getStatus());
+			System.out.println("Aeroporto de Origem: " + vooSelecionado.getAeroportoOrigem());
+			System.out.println("Aeroporto de Destino: " + vooSelecionado.getAeroportoDestino());
+			System.out.println("Horário de Partida Previsto: " + formatter.format(vooSelecionado.getHorarioPartidaPrevisto()));
+			System.out.println("Horário de Chegada Previsto: " + formatter.format(vooSelecionado.getHorarioChegadaPrevisto()));
+
+			System.out.println("Deseja mudar o estado do voo? (S/N)");
+			String resposta = scanner.nextLine();
+
+			if (resposta.equalsIgnoreCase("S")) {
+				System.out.println("Escolha o novo estado do voo:");
+				System.out.println("1. PROGRAMADO");
+				System.out.println("2. CONFIRMADO");
+				System.out.println("3. ATRASADO");
+				System.out.println("4. CANCELADO");
+				System.out.println("5. MUDANCA_PORTAO");
+
+				int opcao = scanner.nextInt();
+				scanner.nextLine(); // Limpar o buffer do scanner
+
+				StatusVoo novoStatus = null;
+
+				switch (opcao) {
+					case 1:
+						novoStatus = StatusVoo.PROGRAMADO;
+						break;
+					case 2:
+						novoStatus = StatusVoo.CONFIRMADO;
+						break;
+					case 3:
+						novoStatus = StatusVoo.ATRASADO;
+						System.out.println("Digite a nova hora de partida (YYYY-MM-DD HH:mm): ");
+						LocalDateTime novaPartida = LocalDateTime.parse(scanner.nextLine(), formatter);
+						System.out.println("Digite a nova hora de chegada (YYYY-MM-DD HH:mm): ");
+						LocalDateTime novaChegada = LocalDateTime.parse(scanner.nextLine(), formatter);
+						vooSelecionado.setStatusNotifyAtrasado(novoStatus, novaPartida, novaChegada);
+						System.out.println("Informações do Voo:");
+						System.out.println("Código: " + vooSelecionado.getCodigoVoo());
+						System.out.println("Status: " + vooSelecionado.getStatus());
+						System.out.println("Aeroporto de Origem: " + vooSelecionado.getAeroportoOrigem());
+						System.out.println("Aeroporto de Destino: " + vooSelecionado.getAeroportoDestino());
+						System.out.println("Horário de Partida Previsto: " + formatter.format(vooSelecionado.getHorarioPartidaPrevisto()));
+						System.out.println("Horário de Chegada Previsto: " + formatter.format(vooSelecionado.getHorarioChegadaPrevisto()));
+						break;
+					case 4:
+						novoStatus = StatusVoo.CANCELADO;
+						break;
+					case 5:
+						novoStatus = StatusVoo.MUDANCA_PORTAO;
+						break;
+					default:
+						System.out.println("Opção inválida.");
+						continue; // Reinicia o loop
+				}
+
+				if (opcao != 3) {
+					vooSelecionado.setStatusNotify(novoStatus);
+				}
+			}
+		}
 
 	}}
 
