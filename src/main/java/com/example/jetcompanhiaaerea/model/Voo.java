@@ -66,6 +66,12 @@ public class Voo {
             observador.atualizar(this);
         }
     }
+    public void setStatusNotifyAtrasado(StatusVoo novoStatus, LocalDateTime novaPartida, LocalDateTime novaChegada) {
+        this.status = novoStatus;
+        this.horarioChegadaPrevisto = novaChegada;
+        this.horarioPartidaPrevisto = novaPartida;
+        notificarObservadores();
+    }
 
 }
 
